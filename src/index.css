@@ -188,3 +188,16 @@ li {
 .reset:hover {
   cursor: pointer;
 }
+
+.react-tabs__tab-list {
+  border: none !important;
+}
+
+.react-tabs__tab {
+  border: none !important;
+}
+
+.react-tabs__tab--selected {
+  border: none !important;
+  color: #d0021b !important;
+}

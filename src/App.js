@@ -4,16 +4,20 @@ import Home from "./Home";
 import NotFound from "./NotFound";
 import Battle from "./Battle";
 import Popular from "./Popular";
+import Nav from "./Nav";
 
 const App = () => {
   return (
-    <BrowserRouter basename="main">
-      <Routes>
-        <Route element={<Home />} path="/" />
-        <Route element={<NotFound />} path="*" />
-        <Route element={<Battle />} path="/battle" />
-        <Route element={<Popular />} path="/popular" />
-      </Routes>
+    <BrowserRouter>
+      <div className="container">
+        <Nav />
+        <Routes>
+          <Route element={<Home />} path="/" />
+          <Route element={<NotFound />} path="*" />
+          <Route element={<Battle />} path="/battle" />
+          <Route element={<Popular />} path="/popular" />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 };

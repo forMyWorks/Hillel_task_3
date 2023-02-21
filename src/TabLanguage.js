@@ -4,6 +4,8 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
 import { fetchPopularRepos } from "./api";
+import List from "./List";
+import Search from "./Search";
 
 const tabsLanguage = ["All", "Javascript", "Ruby", "Java", "CSS", "Python"];
 const lowerTabsLanguage = tabsLanguage.map((item) => {
@@ -13,27 +15,35 @@ const lowerTabsLanguage = tabsLanguage.map((item) => {
 // eslint-disable-next-line
 export default () => {
   const [searchParams, setSearchParams] = useSearchParams({ tab: "all" });
+  const [reposFilter, setReposFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [repos, setRepos] = useState([]);
+  const [reposCopy, setReposCopy] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoading(true);
 
     fetchPopularRepos(searchParams.get("tab"))
-      .then((data) => setRepos(data))
+      .then((data) => {
+        setRepos(data);
+        setReposCopy(data);
+      })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
   }, [searchParams]);
-  //   lowerTabsLanguage.forEach((item) => {
-  //     fetchPopularRepos(item)
-  //       .then((data) => setRepos([...repos, data]))
-  //       .catch((error) => setError(error))
-  //       .finally(() => setLoading(false));
-  //   }, []);
-  // });
 
-  function handleSubmit(event, language) {
+  useEffect(() => {
+    // if (reposFilter) {
+    //   setReposFilter(reposFilter.replace(/\W|\d/g, ""));
+    // }
+    searchEmp(reposFilter, repos);
+    // {
+    // console.log(reposFilter);
+    // }
+  }, [reposFilter]);
+
+  function handleSubmit(event) {
     event.preventDefault();
     setSearchParams({ tab: event.target.textContent.toLowerCase() });
   }
@@ -42,6 +52,19 @@ export default () => {
     lowerTabsLanguage.indexOf(searchParams.get("tab")) !== -1
       ? lowerTabsLanguage.indexOf(searchParams.get("tab"))
       : null;
+
+  const searchEmp = (searchStr, dataFilter) => {
+    if (searchStr.length === 0) {
+      setReposCopy(repos);
+      return;
+    }
+
+    setReposCopy(
+      dataFilter.filter(
+        (item) => item.name.toLowerCase().indexOf(searchStr.toLowerCase()) > -1
+      )
+    );
+  };
 
   return (
     <>
@@ -67,32 +90,12 @@ export default () => {
           </TabPanel>
         ))}
       </Tabs>
+
       {!loading ? (
-        <ul className="popular-list">
-          {repos.map((repo, index) => {
-            return (
-              <li key={repo.name} className="popular-item">
-                <div className="popular-rank">#{index + 1}</div>
-                <ul className="space-list-items">
-                  <li>
-                    <img
-                      className="avatar"
-                      src={repo.owner.avatar_url}
-                      alt="Avatar"
-                    />
-                  </li>
-                  <li>
-                    <a href={repo.html_url} rel="noreferrer" target="_blank">
-                      {repo.name}
-                    </a>
-                  </li>
-                  <li>@{repo.owner.login}</li>
-                  <li>{repo.stargazers_count}</li>
-                </ul>
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          <Search reposFilter={reposFilter} onChangeSearch={setReposFilter} />
+          <List repos={reposCopy} />
+        </>
       ) : null}
     </>
   );

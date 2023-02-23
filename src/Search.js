@@ -1,56 +1,49 @@
-import { useEffect, useState } from "react";
-import { DebounceInput } from "react-debounce-input";
-// import debounce from "debounce";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+const Search = ({ onChangeSearch }) => {
+  // timeout - needed just for implementation debounce
+  const [timeout, setMyTimeout] = useState();
 
-const Search = ({ reposFilter, onChangeSearch }) => {
-  useEffect(() => {
-    return () => onChangeSearch("");
-  }, []);
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => onChangeSearch(value), delay || 500);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [value, delay]);
+  // inputValue - needed just for display input
+  const [searchParams, setSearchParams] = useSearchParams({ search: "" });
+  const [inputValue, setInputValue] = useState(searchParams.get("search"));
 
   const onEscape = (event) => {
     if (event.code === "Escape") {
       onChangeSearch("");
+      setInputValue("");
       document.removeEventListener("keydown", onEscape);
     }
   };
   document.addEventListener("keydown", onEscape);
 
-  // const [searchTerm, setSearchTerm] = useState("");
-  // const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  useEffect(() => {
+    onChangeSearch(searchParams.get("search"));
+  }, []);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setDebouncedSearchTerm(reposFilter);
-  //   }, 5000); // set the delay time in ms
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [reposFilter]);
+  const onMyChange = (event) => {
+    setInputValue(event.target.value.replace(/\W|\d/g, ""));
+    clearTimeout(timeout);
+    setMyTimeout(
+      setTimeout(() => {
+        searchParams.set("search", event.target.value.replace(/\W|\d/g, ""));
+        setSearchParams(searchParams);
+        onChangeSearch(event.target.value.replace(/\W|\d/g, ""));
+        console.log(searchParams.get("search"), "onMyChange");
+      }, 2000)
+    );
+    // clearTimeout(timeout);
+  };
 
   return (
-    <input
-      className="input-search"
-      value={reposFilter}
-      // debounceTimeout={300}
-      // onChange={debounce(async (event) => {
-      //   await onChangeSearch(event.target.value.replace(/\W|\d/g, ""));
-      //   console.log(event.target);
-      // }, 1000)}
-
-      onChange={(event) =>
-        onChangeSearch(event.target.value.replace(/\W|\d/g, ""))
-      }
-      placeholder="Search..."
-      // replace(/\d|[А-Я]|[а-я]|і|І/g, "")  .replace(/\W|\d/g, "")
-    />
+    <>
+      <input
+        className="input-search"
+        value={inputValue}
+        onChange={onMyChange}
+        placeholder="Search..."
+      />
+    </>
   );
 };
 export default Search;

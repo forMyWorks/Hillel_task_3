@@ -1,4 +1,5 @@
-const List = ({ repos }) => {
+import { memo } from "react";
+const List = memo(({ repos }) => {
   return (
     <ul className="popular-list">
       {repos.map((repo, index) => {
@@ -26,5 +27,5 @@ const List = ({ repos }) => {
       })}
     </ul>
   );
-};
+});
 export default List;

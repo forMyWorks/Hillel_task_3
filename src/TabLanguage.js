@@ -23,7 +23,6 @@ export default () => {
 
   useEffect(() => {
     setLoading(true);
-
     fetchPopularRepos(searchParams.get("tab"))
       .then((data) => {
         setRepos(data);
@@ -31,16 +30,11 @@ export default () => {
       })
       .catch((error) => setError(error))
       .finally(() => setLoading(false));
-  }, [searchParams]);
+  }, [searchParams.get("tab")]);
 
   useEffect(() => {
-    // if (reposFilter) {
-    //   setReposFilter(reposFilter.replace(/\W|\d/g, ""));
-    // }
     searchEmp(reposFilter, repos);
-    // {
-    // console.log(reposFilter);
-    // }
+    console.log(reposFilter);
   }, [reposFilter]);
 
   function handleSubmit(event) {
@@ -54,15 +48,16 @@ export default () => {
       : null;
 
   const searchEmp = (searchStr, dataFilter) => {
-    if (searchStr.length === 0) {
+    if (searchStr.length <= 1) {
+      console.log(1111111111111111);
+
       setReposCopy(repos);
       return;
     }
-
     setReposCopy(
-      dataFilter.filter(
-        (item) => item.name.toLowerCase().indexOf(searchStr.toLowerCase()) > -1
-      )
+      dataFilter.filter((item) => {
+        return item.name.toLowerCase().indexOf(searchStr) !== -1;
+      })
     );
   };
 
@@ -75,7 +70,7 @@ export default () => {
               <Tab
                 key={index}
                 onClick={(event) => {
-                  handleSubmit(event, item);
+                  handleSubmit(event);
                 }}
               >
                 {item}
@@ -86,14 +81,14 @@ export default () => {
 
         {tabsLanguage.map((item, index) => (
           <TabPanel key={index}>
-            {loading ? <h2>Wait, soon the list of {item}...</h2> : null}
+            {!loading ? null : <h3>Wait, soon the list of {item}...</h3>}
           </TabPanel>
         ))}
       </Tabs>
 
       {!loading ? (
         <>
-          <Search reposFilter={reposFilter} onChangeSearch={setReposFilter} />
+          <Search onChangeSearch={setReposFilter} />
           <List repos={reposCopy} />
         </>
       ) : null}

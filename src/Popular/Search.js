@@ -29,8 +29,7 @@ const Search = ({ onChangeSearch }) => {
         searchParams.set("search", event.target.value.replace(/\W|\d/g, ""));
         setSearchParams(searchParams);
         onChangeSearch(event.target.value.replace(/\W|\d/g, ""));
-        console.log(searchParams.get("search"), "onMyChange");
-      }, 2000)
+      }, 1000)
     );
     // clearTimeout(timeout);
   };

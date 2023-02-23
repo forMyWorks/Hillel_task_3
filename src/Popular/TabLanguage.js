@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
-import { fetchPopularRepos } from "./api";
+import { fetchPopularRepos } from "../api";
 import List from "./List";
 import Search from "./Search";
 
@@ -34,7 +34,6 @@ export default () => {
 
   useEffect(() => {
     searchEmp(reposFilter, repos);
-    console.log(reposFilter);
   }, [reposFilter]);
 
   function handleSubmit(event) {
@@ -49,8 +48,6 @@ export default () => {
 
   const searchEmp = (searchStr, dataFilter) => {
     if (searchStr.length <= 1) {
-      console.log(1111111111111111);
-
       setReposCopy(repos);
       return;
     }
@@ -82,6 +79,7 @@ export default () => {
         {tabsLanguage.map((item, index) => (
           <TabPanel key={index}>
             {!loading ? null : <h3>Wait, soon the list of {item}...</h3>}
+            {!error ? null : <h3>{error}</h3>}
           </TabPanel>
         ))}
       </Tabs>

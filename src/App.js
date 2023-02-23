@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import NotFound from "./NotFound";
 import Battle from "./Battle";
-import Popular from "./Popular";
+import Popular from "./Popular/Popular";
 import Nav from "./Nav";
 
 const App = () => {

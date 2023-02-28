@@ -47,7 +47,7 @@ export default () => {
       : null;
 
   const searchEmp = (searchStr, dataFilter) => {
-    if (searchStr.length <= 1) {
+    if (searchStr.length <= 0) {
       setReposCopy(repos);
       return;
     }

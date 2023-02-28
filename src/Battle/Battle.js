@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import PlayerInput from "./PlayerInput";
 import PlayerPreview from "./PlayerPreview";
 
-const playerInput = (
+const playerPreview = (
   avatar,
   setShowPlayerPreview,
   battleReady,
@@ -23,7 +23,7 @@ const playerInput = (
 const effective = {
   username: "username",
   label: "Player",
-  render: playerInput,
+  render: playerPreview,
 };
 
 const battleR = { battle: false };
@@ -55,7 +55,7 @@ const Battle = () => {
           />
         ))}
       </div>
-      <div className="row addDel">
+      <div className="row add-del">
         {battleReady.map((item) => item.battle).includes(false) && (
           <button className="button" onClick={addPlayer}>
             Add Player

@@ -233,20 +233,18 @@ li {
   outline: red solid 2px;
 }
 
-.row.addDel {
-  /* display: flex;
-  margin: 0, auto; */
+.row.add-del {
   margin-top: 70px;
-  /* width: 700px; */
+
   display: flex;
   justify-content: center;
   gap: 200px;
 }
-.row.addDel > .button {
+.row.add-del > .button {
   display: inline;
   margin: 0;
 }
-.addDel > button {
+.add-del > button {
   width: 120px;
 }
 button.bat {

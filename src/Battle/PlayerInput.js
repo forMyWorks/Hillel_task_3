@@ -7,6 +7,8 @@ const PlayerInput = ({
   battleReady,
   setBattleReady,
   index,
+  result,
+  setResult,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [showPlayerPreview, setShowPlayerPreview] = useState(false);
@@ -33,11 +35,15 @@ const PlayerInput = ({
         disabled={!inputValue}
         onClick={() => {
           setShowPlayerPreview(true);
+
           setBattleReady([
             ...battleReady.slice(0, index),
-            { battle: true },
+            true,
             ...battleReady.slice(index, -1),
           ]);
+          const res = [...result];
+          res[index] = inputValue;
+          setResult(res);
         }}
       >
         Submit

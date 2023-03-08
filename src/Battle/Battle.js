@@ -26,20 +26,28 @@ const effective = {
   render: playerPreview,
 };
 
-const battleR = { battle: false };
-
 const Battle = () => {
   const [data, setData] = useState([effective, effective]);
-  const [battleReady, setBattleReady] = useState([battleR, battleR]);
+
+  const [battleReady, setBattleReady] = useState([false, false]);
+  const [result, setResult] = useState([]);
   const addPlayer = () => {
     setData([...data, effective]);
-    setBattleReady([...battleReady, battleR]);
+    setBattleReady([...battleReady, false]);
   };
   const deletePlayer = () => {
     setData([...data].slice(0, -1));
     setBattleReady([...battleReady].slice(0, -1));
   };
-
+  const onResult = () => {
+    return result
+      .reduce(
+        (accumulator, item, index) =>
+          accumulator + `player${index + 1}=${item}&`,
+        "?"
+      )
+      .slice(0, -1);
+  };
   return (
     <>
       <div className="row">
@@ -52,24 +60,25 @@ const Battle = () => {
             battleReady={battleReady}
             setBattleReady={setBattleReady}
             index={index}
+            result={result}
+            setResult={setResult}
           />
         ))}
       </div>
       <div className="row add-del">
-        {battleReady.map((item) => item.battle).includes(false) && (
+        {battleReady.includes(false) && (
           <button className="button" onClick={addPlayer}>
             Add Player
           </button>
         )}
 
-        {battleReady.map((item) => item.battle).includes(false) &&
-        data.length > 2 ? (
+        {battleReady.includes(false) && data.length > 2 ? (
           <button className="button" onClick={deletePlayer}>
             Delete Player
           </button>
         ) : null}
-        {battleReady.map((item) => item.battle).includes(false) ? null : (
-          <Link to="/battle/results">
+        {battleReady.includes(false) ? null : (
+          <Link to={{ pathname: "/battle/results", search: onResult() }}>
             <button className="button bat">Battle</button>
           </Link>
         )}
